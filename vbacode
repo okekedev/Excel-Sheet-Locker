@@ -1,0 +1,199 @@
+Dim tabPasswords As Object
+
+Sub InitializeTabPasswords()
+    ' Create a dictionary to store tab names and their passwords
+    If tabPasswords Is Nothing Then
+        Set tabPasswords = CreateObject("Scripting.Dictionary")
+    Else
+        tabPasswords.RemoveAll ' Clear any existing items
+    End If
+    
+    ' Assign passwords for each tab
+    tabPasswords("Marketing") = "Marketing01"
+    tabPasswords("Product Development") = "Product01"
+    tabPasswords("Customer Service") = "Customer01"
+    tabPasswords("Finance") = "Finance01"
+    tabPasswords("Password Key") = "Password01"
+    
+End Sub
+
+
+Sub HideTabsWithPassword()
+    ' Call the initialization subroutine
+    InitializeTabPasswords
+    
+    Dim ws As Worksheet
+    Dim tabName As Variant
+    Dim password As String
+    
+    ' Loop through each tab and hide it with its respective password protection
+    For Each tabName In tabPasswords.Keys
+        Set ws = ThisWorkbook.Sheets(tabName)
+        password = tabPasswords(tabName)
+        
+        ' Check if the sheet is visible
+        If ws.Visible <> xlSheetVeryHidden Then
+            ' Hide the sheet
+            ws.Visible = xlSheetVeryHidden
+        End If
+        
+        ' Protect the sheet with the specified password
+        ws.Protect password:=password, UserInterfaceOnly:=True
+    Next tabName
+    
+    ' Save and close the workbook
+    ThisWorkbook.Save
+    ThisWorkbook.Close
+    
+End Sub
+
+Sub UnlockSheetCaller()
+    Dim password As String
+    Dim ws As Worksheet
+    Dim foundMatch As Boolean
+     
+     InitializeTabPasswords
+    
+    
+    ' Prompt the user to enter the password
+    password = InputBox("Enter the password to unlock your sheet:", "Sheet Unlock")
+    
+    ' Initialize foundMatch flag
+    foundMatch = False
+    
+    ' Loop through each tab in the dictionary
+    For Each tabName In tabPasswords.Keys
+        ' Check if the entered password matches the password for this tab
+        If password = tabPasswords(tabName) Then
+            ' Find the corresponding worksheet
+            Set ws = ThisWorkbook.Sheets(tabName)
+        
+            
+            ' Unhide the worksheet
+            ws.Visible = xlSheetVisible
+            ws.Unprotect password:=password
+            
+            MsgBox "Sheet '" & tabName & "' unlocked successfully!", vbInformation
+            foundMatch = True
+            Exit For ' Exit the loop once a match is found
+        End If
+    Next tabName
+    
+    ' Notify the user if no sheets were unlocked
+    If Not foundMatch Then
+        MsgBox "Incorrect password or no matching sheet found.", vbExclamation
+    End If
+End Sub
+
+
+
+Sub AdminUnlockAllTabs()
+    InitializeTabPasswords
+    
+    Dim adminPassword As String
+    Dim password As String
+    Dim ws As Worksheet
+    
+    ' Prompt the user to enter the admin password
+    adminPassword = InputBox("Enter the admin password:", "Admin Unlock")
+    
+    ' Check if the admin password is correct
+    If adminPassword = "Admin01" Then
+        ' Loop through each worksheet in the workbook
+        For Each ws In ThisWorkbook.Worksheets
+            ' Check if the sheet is protected and hidden
+            If ws.ProtectContents And ws.Visible = xlSheetVeryHidden Then
+                ' Get the password for the sheet from tabPasswords dictionary
+                password = tabPasswords(ws.Name)
+                
+                ' Unprotect the sheet if the password matches
+                If password = tabPasswords(ws.Name) Then
+                    ws.Visible = xlSheetVisible
+                    ws.Unprotect password:=password
+                End If
+            End If
+        Next ws
+        
+        MsgBox "All tabs unlocked successfully!", vbInformation
+    Else
+        MsgBox "Incorrect admin password!", vbExclamation
+    End If
+End Sub
+
+
+Sub ToggleUIVisibility()
+    Dim enteredPassword As String
+    Dim correctPassword As String
+    correctPassword = "Start01" ' Replace "your_password_here" with your desired password
+    
+    ' Prompt the user to enter the password
+    enteredPassword = InputBox("Enter the password to start/stop the program", "Password Required")
+    
+    ' Check if the entered password is correct
+    If enteredPassword = correctPassword Then
+        ' Check if UI elements are already hidden
+        If Application.DisplayFullScreen = True Then
+            ' If UI elements are hidden, show them
+            Application.DisplayFullScreen = False
+            Application.DisplayFormulaBar = True
+            Application.DisplayStatusBar = True
+            Application.ExecuteExcel4Macro "SHOW.TOOLBAR(""Ribbon"", True)"
+            ActiveWindow.DisplayWorkbookTabs = True
+            MsgBox "Options are now visible.", vbInformation
+        Else
+            ' If UI elements are visible, hide them
+            Application.DisplayFullScreen = True
+            Application.DisplayFormulaBar = False
+            Application.DisplayStatusBar = False
+            Application.ExecuteExcel4Macro "SHOW.TOOLBAR(""Ribbon"", False)"
+            ActiveWindow.DisplayWorkbookTabs = False
+            MsgBox "Options are now hidden.", vbInformation
+        End If
+    Else
+        MsgBox "Incorrect password. Access denied.", vbExclamation
+    End If
+End Sub
+
+
+Sub LockWorkbook()
+
+    Dim ws As Worksheet
+    Dim tabName As Variant
+    Dim password As String
+    
+    ' Create a dictionary to store tab names and their passwords
+    Set tabPasswords = CreateObject("Scripting.Dictionary")
+    
+    ' Assign passwords for each tab
+    tabPasswords("Marketing") = "Marketing01"
+    tabPasswords("Product Development") = "Product01"
+    tabPasswords("Customer Service") = "Customer01"
+    tabPasswords("Finance") = "Finance01"
+    tabPasswords("Password Key") = "Password01"
+    
+    ' Loop through each tab and hide it with its respective password protection
+    For Each tabName In tabPasswords.Keys
+        Set ws = ThisWorkbook.Sheets(tabName)
+        password = tabPasswords(tabName)
+        
+        ' Check if the sheet is visible
+        If ws.Visible <> xlSheetVeryHidden Then
+            ' Hide the sheet
+            ws.Visible = xlSheetVeryHidden
+        End If
+        
+        ' Protect the sheet with the specified password
+        ws.Protect password:=password, UserInterfaceOnly:=True
+    Next tabName
+    
+    ' Save and close the workbook
+    ThisWorkbook.Save
+    
+End Sub
+
+Sub NavigateHome()
+
+
+ThisWorkbook.Sheets("Home").Activate
+
+End Sub
