@@ -20,12 +20,12 @@ Usage:
 1.	Open the Excel workbook containing the Excel Sheet Locker program.
 2.	Navigate to the "Home" tab to access the program's buttons and functions.
 3.	Click on the desired button to perform a specific action:
-•	        Lock Tabs: Hides all tabs and protects them with their assigned passwords.
-•	        Unlock Sheet: Prompts for a password to unlock a specific tab.
-•	        Admin Unlock All Tabs: Prompts for the admin password to unlock all tabs at once.
-•	        Toggle UI Visibility: Hides or shows the ribbon, formula bar, status bar, and workbook tabs.
-•	        Exit: Closes the workbook.
-5.      Follow the prompts and enter the required passwords to access the protected tabs.
+   Lock Tabs: Hides all tabs and protects them with their assigned passwords.
+   Unlock Sheet: Prompts for a password to unlock a specific tab.
+   Admin Unlock All Tabs: Prompts for the admin password to unlock all tabs at once.
+   Toggle UI Visibility: Hides or shows the ribbon, formula bar, status bar, and workbook tabs.
+   Exit: Closes the workbook.
+
    
 Administration Functions:
 The program includes two administration functions accessible from the "Home" tab:
